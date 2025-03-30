@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Skills{% endblock %}
+
+{% block body %}
+
+<div class="page-layout">
+    <h1>{{ app.user.firstName }} Skills</h1>
+
+    <div class="skills" data-controller="skills" data-csrf-protection-token-value="{{ csrf_token('update_skill') }}">
+
+        {% for skill in allSkills %}
+            <article class="skill">
+
+                <label for="{{ skill.id }}">
+                    <input
+                            type="checkbox"
+                            id="{{ skill.id }}"
+                            name="{{ skill.name }}"
+                            data-skill-id="{{ skill.id }}"
+                            data-action="change->skills#selectSkill"
+                            {% if skill.id in userSkillIds %}checked{% endif %}
+                    />
+                    <span>{{ skill.name }}</span>
+                </label>
+
+                <div
+                        style="display: {{ skill.id in userSkillIds ? 'block' : 'none' }}"
+                        class="skill-level"
+                        id="skill-level-{{ skill.id }}"
+                >
+
+                    <input
+                            class="skill__range"
+                            type="range"
+                            min="1"
+                            max="5"
+                            step="1"
+                            value="{{ skillIdLevel[skill.id] ?? 0 }}"
+                            data-skill-target="slider"
+                            data-skill-id="{{ skill.id }}"
+                            data-action="change->skills#updateSkillLevel"
+                    />
+
+                </div>
+
+            </article>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}

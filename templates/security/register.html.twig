@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+
+    <div class="page-layout">
+
+        <form method="post" class="form">
+
+            {% if app.user %}
+                <div class="mb-3">
+                    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                </div>
+            {% endif %}
+
+            <h1 class="h1">Register</h1>
+
+            <div class="form-row">
+
+                <div class="form-input">
+                    <label for="email">Email *</label>
+                    <input type="email" name="_email" id="email" class="form-control" autocomplete="email" required autofocus>
+                </div>
+
+                <div class="form-input">
+                    <label for="password">Password *</label>
+                    <input type="password" name="_password" id="password" class="form-control" required>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-input">
+                    <label for="first_name">First Name</label>
+                    <input type="text" name="_first_name" id="first_name" class="form-control">
+                </div>
+
+                <div class="form-input">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" name="_last_name" id="last_name" class="form-control">
+                </div>
+
+            </div>
+
+            <input type="hidden" name="_csrf_token"
+                   value="{{ csrf_token('authenticate') }}"
+            >
+
+            <button class="btn" type="submit">
+                Register
+            </button>
+        </form>
+
+    </div>
+
+{% endblock %}

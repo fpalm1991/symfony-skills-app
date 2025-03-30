@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}All Skills{% endblock %}
+
+{% block body %}
+
+    <div class="page-layout">
+        <h1>All Skills</h1>
+
+        <div class="skills-grid">
+            {% for userSkill in allUserSkills %}
+
+                <div class="skill-card">
+                    <div class="skill-card__user">
+                        <strong>{{ userSkill.user.firstName }} {{ userSkill.user.lastName }}</strong><br>
+                        <small>{{ userSkill.user.email }}</small>
+                    </div>
+
+                    <div class="skill-info">
+                        <h3 class="skill-card__title">{{ userSkill.skill.name }}</h3>
+                        <div class="level-bar level-{{ userSkill.level }}">
+                            Level: {{ userSkill.level }}
+                        </div>
+                    </div>
+                </div>
+
+            {% else %}
+                <p>No skills found.</p>
+            {% endfor %}
+        </div>
+
+    </div>
+
+{% endblock %}
