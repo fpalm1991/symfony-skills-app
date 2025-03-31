@@ -1,6 +1,6 @@
 # Symfony Skills App Prototype (Symfony + Stimulus)
 
-This is a learning prototype built with **Symfony** and **Stimulus.js**, focused on updating user skill data interactively and modeling custom relationships in the database.
+This is a learning project built with **Symfony** and **Stimulus.js**, focused on updating user skill data interactively and modeling custom relationships in the database.
 
 ## About The Project
 

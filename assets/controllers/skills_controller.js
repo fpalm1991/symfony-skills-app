@@ -1,8 +1,8 @@
-import { Controller } from '@hotwired/stimulus';
+import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
     connect() {
-        console.log('Skills Controller connecting...');
+        console.log("Skills Controller connecting...");
     }
 
     get csrfProtectionTokenValue() {
@@ -15,68 +15,81 @@ export default class extends Controller {
         const alreadyChecked = checkbox.checked;
         const csrfToken = this.csrfProtectionTokenValue;
 
-        const response = await fetch('/my-skills', {
-            method: 'POST',
+        const response = await fetch("/my-skills", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': csrfToken
-
+                "Content-Type": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-TOKEN": csrfToken,
             },
             body: JSON.stringify({
                 skill_id: selectedSkillId,
                 checkbox_checked: alreadyChecked,
                 _csrf_token: csrfToken,
-            })
-        })
+            }),
+        });
 
         if (!response.ok) {
             throw new Error("Response was not ok");
         }
 
         try {
-            const data = await response.json();
-            console.log(data);
+            // const data = await response.json();
+            // console.log(data);
 
-            const sliderInput = document.getElementById(`skill-level-${selectedSkillId }`)
+            const skillSliderContainer = document.getElementById(`skill-level-${selectedSkillId}`);
 
             if (alreadyChecked) {
-                sliderInput.style.display = "block";
+                skillSliderContainer.style.display = "block";
+
+                // Reset skill level to 1
+                console.log("Resetting skill level...");
+                const slider = document.getElementById(`skill-slider-${selectedSkillId}`);
+                if (slider) {
+                    slider.value = 1;
+                    await this.updateSkillLevel(null, slider, 1);
+                }
             } else {
-                sliderInput.style.display = "none";
+                skillSliderContainer.style.display = "none";
             }
         } catch (error) {
             console.error("Error selecting skill:", error);
         }
     }
 
-    async updateSkillLevel(e) {
-        const slider = e.currentTarget;
-        const skillId = slider.dataset.skillId;
-        const skillLevel = e.currentTarget.value;
+    async updateSkillLevel(e, sliderInputElement = null, level = null) {
+        const slider = sliderInputElement ?? e?.currentTarget;
+        const newSkillLevel = level !== null ? +level : +slider?.value ?? 1;
+
+        if (!slider) {
+            console.warn("No slider element provided or found.");
+            return;
+        }
+
         const csrfToken = this.csrfProtectionTokenValue;
+        const skillId = slider.dataset.skillId;
 
         const response = await fetch(`/my-skills/${skillId}`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': csrfToken
+                "Content-Type": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-TOKEN": csrfToken,
             },
             body: JSON.stringify({
                 skill_id: skillId,
-                skill_level: skillLevel,
+                skill_level: newSkillLevel,
                 _csrf_token: csrfToken,
-            })
-        })
+            }),
+        });
 
         if (!response.ok) {
             throw new Error("Response was not ok");
         }
 
         try {
-            const data = await response.json();
-            console.log(data);
+            // const data = await response.json();
+            // console.log(data);
         } catch (error) {
             console.error("Error selecting skill:", error);
         }
